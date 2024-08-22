@@ -82,38 +82,6 @@ if st.button('Get Recommendation'):
     with st.spinner('Processing your inputs...'):
         time.sleep(3)
 
-    # Overlay for results
-    st.markdown(
-        """
-        <style>
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-        }
-        .overlay-text {
-            color: white;
-            font-size: 24px;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        </style>
-        <div class="overlay">
-            <div class="overlay-text">
-                Calculating your recommendation...
-            </div>
-        </div>
-        """, unsafe_allow_html=True
-    )
-    time.sleep(2)  # Additional delay to simulate model processing
-
     # Recommendation logic based on user inputs, currency preference, and sentiment
     suitable_products = []
     for product, details in products.items():
@@ -126,20 +94,49 @@ if st.button('Get Recommendation'):
     if market_sentiment_input.lower() != st.session_state['market_sentiment']:
         st.warning(f"Your market outlook ({market_sentiment_input}) differs from the current market sentiment ({st.session_state['market_sentiment']}).")
 
-    # Display results
+    # Displaying the recommendation in an overlay modal
+    overlay_content = ""
+    if suitable_products:
+        overlay_content = "<div style='color:white;'><h3>We recommend the following products:</h3>"
+        for product, details in suitable_products:
+            overlay_content += f"<p><b>{product}</b>: {details['description']} (Min. Investment: {details['min_investment']}, Currency: {details['currency']}, Risk: {details['risk'].capitalize()})</p>"
+        overlay_content += "</div>"
+    else:
+        overlay_content = "<div style='color:white;'><h3>Unfortunately, no products match your criteria. Consider adjusting your investment amount, currency, or risk preference.</h3></div>"
+
+    # Injecting HTML/CSS for modal popup
     st.markdown(
-        """
+        f"""
         <style>
-        .overlay {
-            display: none;
-        }
+        .modal {{
+            display: block;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.9);
+        }}
+        .modal-content {{
+            background-color: #222;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+        }}
         </style>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                {overlay_content}
+                <button onclick="document.getElementById('myModal').style.display='none'">Get Started</button>
+            </div>
+        </div>
         """, unsafe_allow_html=True
     )
-    if suitable_products:
-        st.success('Based on your inputs, we recommend the following products:')
-        for product, details in suitable_products:
-            st.markdown(f"**{product}** - {details['description']} (Minimum Investment: {details['min_investment']}, Currency: {details['currency']}, Risk: {details['risk'].capitalize()})")
-        st.button("Get Started")
-    else:
-        st.error("Unfortunately, no products match your criteria. Consider adjusting your investment amount, currency, or risk preference.")
