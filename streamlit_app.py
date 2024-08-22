@@ -71,8 +71,8 @@ if st.sidebar.button('Update Sentiment'):
 st.header('Investment Product Recommendation')
 st.subheader('Please provide your details')
 
-age = st.number_input('Age', min_value=18, max_value=100, value=30)
-investment_amount = st.number_input('Investment Amount', min_value=100, max_value=1000000, value=10000)
+age = st.number_input('Age', min_value=18, max_value=100, value=None)
+investment_amount = st.number_input('Investment Amount', min_value=100, max_value=1000000, value=None)
 risk_preference = st.selectbox('Risk Preference', ['Low', 'Medium', 'High'])
 currency_preference = st.selectbox('Preferred Currency', ['JMD', 'USD'])
 market_sentiment_input = st.selectbox('What is your current outlook on the market?', ['Positive', 'Negative', 'Neutral'])
@@ -118,6 +118,7 @@ if st.button('Get Recommendation'):
     suitable_products = []
     for product, details in products.items():
         if (details['risk'] == risk_preference.lower() and
+            investment_amount is not None and
             investment_amount >= details['min_investment'] and
             details['currency'] == currency_preference):
             suitable_products.append((product, details))
@@ -139,5 +140,6 @@ if st.button('Get Recommendation'):
         st.success('Based on your inputs, we recommend the following products:')
         for product, details in suitable_products:
             st.markdown(f"**{product}** - {details['description']} (Minimum Investment: {details['min_investment']}, Currency: {details['currency']}, Risk: {details['risk'].capitalize()})")
+        st.button("Get Started")
     else:
         st.error("Unfortunately, no products match your criteria. Consider adjusting your investment amount, currency, or risk preference.")
