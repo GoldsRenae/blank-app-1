@@ -6,41 +6,49 @@ products = {
     'FX Income Accumulator Portfolio': {
         'risk': 'low', 
         'min_investment': 150, 
+        'currency': 'USD',
         'description': 'A pooled fund that enables investors to earn in USD with low risk.'
     },
     'Money Market Fund': {
         'risk': 'low', 
         'min_investment': 15000, 
+        'currency': 'JMD',
         'description': 'A low-risk fund with investments in high-quality securities, tax-free under certain conditions.'
     },
     'Capital Growth Fund': {
         'risk': 'high', 
         'min_investment': 15000, 
+        'currency': 'JMD',
         'description': 'A high-risk fund focused on capital growth with a mix of equities and fixed income investments.'
     },
     'Unit Trusts Income Portfolio': {
         'risk': 'low', 
         'min_investment': 100000, 
+        'currency': 'JMD',
         'description': 'A fund that provides flexible monthly income and a guaranteed principal sum.'
     },
     'Unit Trust Real Estate Portfolio': {
         'risk': 'high', 
         'min_investment': 100, 
+        'currency': 'JMD',
         'description': 'A fund focused on real estate investments, suitable for long-term investors.'
     },
     'FX Bond Portfolio': {
         'risk': 'medium', 
         'min_investment': 150, 
+        'currency': 'USD',
         'description': 'A medium-risk USD-denominated bond portfolio.'
     },
     'FX Growth Portfolio': {
         'risk': 'high', 
         'min_investment': 150, 
+        'currency': 'USD',
         'description': 'A high-risk USD-denominated equity portfolio with global investment opportunities.'
     },
     'Equity Trading Account': {
         'risk': 'high', 
         'min_investment': 15000, 
+        'currency': 'USD',
         'description': 'An account for trading individual stocks, suitable for high-risk investors.'
     }
 }
@@ -64,8 +72,9 @@ st.header('Investment Product Recommendation')
 st.subheader('Please provide your details')
 
 age = st.number_input('Age', min_value=18, max_value=100, value=30)
-investment_amount = st.number_input('Investment Amount (USD)', min_value=100, max_value=1000000, value=10000)
+investment_amount = st.number_input('Investment Amount', min_value=100, max_value=1000000, value=10000)
 risk_preference = st.selectbox('Risk Preference', ['Low', 'Medium', 'High'])
+currency_preference = st.selectbox('Preferred Currency', ['JMD', 'USD'])
 market_sentiment_input = st.selectbox('What is your current outlook on the market?', ['Positive', 'Negative', 'Neutral'])
 
 if st.button('Get Recommendation'):
@@ -105,10 +114,12 @@ if st.button('Get Recommendation'):
     )
     time.sleep(2)  # Additional delay to simulate model processing
 
-    # Recommendation logic based on user inputs and sentiment
+    # Recommendation logic based on user inputs, currency preference, and sentiment
     suitable_products = []
     for product, details in products.items():
-        if details['risk'] == risk_preference.lower() and investment_amount >= details['min_investment']:
+        if (details['risk'] == risk_preference.lower() and
+            investment_amount >= details['min_investment'] and
+            details['currency'] == currency_preference):
             suitable_products.append((product, details))
 
     if market_sentiment_input.lower() != st.session_state['market_sentiment']:
@@ -127,6 +138,6 @@ if st.button('Get Recommendation'):
     if suitable_products:
         st.success('Based on your inputs, we recommend the following products:')
         for product, details in suitable_products:
-            st.markdown(f"**{product}** - {details['description']} (Minimum Investment: ${details['min_investment']}, Risk: {details['risk'].capitalize()})")
+            st.markdown(f"**{product}** - {details['description']} (Minimum Investment: {details['min_investment']}, Currency: {details['currency']}, Risk: {details['risk'].capitalize()})")
     else:
-        st.error("Unfortunately, no products match your criteria. Consider increasing your investment amount or adjusting your risk preference.")
+        st.error("Unfortunately, no products match your criteria. Consider adjusting your investment amount, currency, or risk preference.")
