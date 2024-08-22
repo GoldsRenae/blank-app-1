@@ -63,7 +63,7 @@ if st.button("Submit"):
             align-items: center;
         }}
         .overlay-content {{
-            background-color: white;
+            background-color: black;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
