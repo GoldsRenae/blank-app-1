@@ -1,8 +1,3 @@
-Given the detailed product descriptions from the document you provided, we can update the Streamlit app to reflect these products while incorporating user inputs, risk levels, and market sentiment. Below is a revised version of the Streamlit app that includes all products, factoring in market sentiment and user inputs to generate tailored investment recommendations.
-
-### Updated Streamlit App Code:
-
-```python
 import streamlit as st
 import time
 
@@ -135,18 +130,3 @@ if st.button('Get Recommendation'):
             st.markdown(f"**{product}** - {details['description']} (Minimum Investment: ${details['min_investment']}, Risk: {details['risk'].capitalize()})")
     else:
         st.error("Unfortunately, no products match your criteria. Consider increasing your investment amount or adjusting your risk preference.")
-```
-
-### Explanation:
-
-1. **Product Descriptions**: The app now includes detailed descriptions of each product, as provided in the "Product descriptors" document.
-
-2. **User Inputs**: Users can input their age, investment amount, risk preference, and current market outlook.
-
-3. **Market Sentiment**: The app now factors in both the administrator's updated market sentiment and the user's personal market outlook.
-
-4. **Recommendation Logic**: The app checks if the user's inputs align with the products' risk levels and minimum investment requirements. If there’s a mismatch between user outlook and market sentiment, the app provides a warning.
-
-5. **Overlay for Results**: The recommendation appears after a processing delay, simulating a model's computation time. The results overlay the input screen to enhance the user experience.
-
-This setup reflects a sophisticated investment recommendation system that can consider various factors, including market sentiment and detailed product options.
